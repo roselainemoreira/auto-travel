@@ -1,0 +1,18 @@
+
+.footer-wrapper {
+  margin-top: auto; /* Empurra o footer para a parte inferior */
+}
+.footer-validador {
+  font-size: 12px;
+  line-height: 30px;
+  text-align: center;
+  background: #1c4986;
+  color: white;
+  width: 100%;
+  padding: 10px 0;
+  bottom: 0; /* Alinha o footer no fundo da tela */
+}
+.footer-validador a {
+  color: white;
+  text-decoration: none;
+}

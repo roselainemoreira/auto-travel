@@ -1,0 +1,37 @@
+.bg-home {
+    position: relative;
+    background-image: url('../../assets/img/auto-travel-bg.jpg');
+    /* Substitua pela URL da sua imagem */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 82vh;
+    /* Ajuste a altura conforme necessário */
+    color: white;
+    overflow: hidden;
+}
+
+.text-home {
+    margin-left: 30px;
+    color: #000;
+    padding: 20px;
+    background-color: rgb(245 244 245 / 47%);
+    border-radius: 10px;
+}
+
+/* Overlay */
+/* .bg-home::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(141, 140, 140, 0.5); 
+    z-index: 1; 
+  }
+  
+  .bg-home > * {
+    position: relative;
+    z-index: 2; 
+  } */
