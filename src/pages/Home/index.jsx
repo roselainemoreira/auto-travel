@@ -16,7 +16,7 @@ const Home = () => {
                 className="container-fluid d-flex align-items-center justify-content-between"
                 style={{ height: "145px", marginTop: "-15px", background: "rgb(108 108 109)" }}
             >
-                <div className="col-7">
+                <div className="col-7" onClick={() => setPassageiro(false)}>
                     <div className="logo">
                         <img
                             src={LogoAT}

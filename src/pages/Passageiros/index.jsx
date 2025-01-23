@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import IApagar from "../../assets/icons/lixo.PNG";
-import ICopiar from "../../assets/icons/copiar-texto.PNG";
-import ICopiado from "../../assets/icons/texto-copiado.PNG";
+import IApagar from "../../assets/icons/lixo.png";
+import ICopiar from "../../assets/icons/copiar-texto.png";
+import ICopiado from "../../assets/icons/texto-copiado.png";
 
 function Formulario() {
     const [texto, setTexto] = useState("");
