@@ -19,7 +19,7 @@ function Formulario() {
                 if (match) {
                     const nome = match[1].trim(); // Parte do nome
                     const cpf = match[2]; // Parte do CPF
-                    return `${nome};${cpf};`;
+                    return `${nome};${cpf}`; // Adiciona ";" apenas no nome
                 }
                 return linha; // Retorna a linha como está se não for válida
             })
@@ -49,7 +49,7 @@ function Formulario() {
                         <h4>
                             <b>Formatação dos nomes da lista</b>
                         </h4>
-                        <div onClick={() => { setTexto(""); setTextoFormatado("");setTextoCopiado(false); }}>
+                        <div onClick={() => { setTexto(""); setTextoFormatado(""); setTextoCopiado(false); }}>
                             <img src={IApagar} alt="Ícone lixeira" />
                         </div>
                     </div>
@@ -78,10 +78,10 @@ function Formulario() {
                         {
                             !textoCopiado ?
                                 <div onClick={() => { copiarTexto(); }} style={{ cursor: "pointer" }}>
-                                    <img src={ICopiar} alt="Ícone lixeira" /><span><b>Copiar</b></span>
+                                    <img src={ICopiar} alt="Ícone copiar" /><span><b>Copiar</b></span>
                                 </div> :
                                 <div style={{ cursor: "pointer" }}>
-                                    <img src={ICopiado} alt="Ícone lixeira" /><span><b>Copiado</b></span>
+                                    <img src={ICopiado} alt="Ícone copiado" /><span><b>Copiado</b></span>
                                 </div>
                         }
                     </div>
