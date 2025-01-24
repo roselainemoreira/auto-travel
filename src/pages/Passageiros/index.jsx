@@ -15,11 +15,12 @@ function Formulario() {
         const linhas = texto.split("\n"); // Divide o texto em linhas
         const textoFormatado = linhas
             .map((linha) => {
-                const match = linha.match(/^([^\d]+)(\d{11}|\d{3}\.\d{3}\.\d{3}-\d{2})$/); // Divide nome e CPF
+                // Regex ajustado para capturar variações de espaços ou tabulação
+                const match = linha.match(/^([^\d\t]+)[\t\s]*(\d{10,11}|\d{3}\.\d{3}\.\d{3}-\d{2})$/);
                 if (match) {
                     const nome = match[1].trim(); // Parte do nome
                     const cpf = match[2]; // Parte do CPF
-                    return `${nome};${cpf}`; // Adiciona ";" apenas no nome
+                    return `${nome};${cpf}`; // Adiciona ";" após o nome
                 }
                 return linha; // Retorna a linha como está se não for válida
             })
