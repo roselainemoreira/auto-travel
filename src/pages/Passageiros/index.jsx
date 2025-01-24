@@ -11,23 +11,34 @@ function Formulario() {
 
     // Função para formatar o texto
     const formatarTexto = (e) => {
-        e.preventDefault(); // Evita o recarregamento da página ao submeter o formulário
-        const linhas = texto.split("\n"); // Divide o texto em linhas
+        e.preventDefault();
+    
+        const linhas = texto.split("\n");
+    
         const textoFormatado = linhas
             .map((linha) => {
-                // Regex ajustado para capturar variações de espaços ou tabulação
-                const match = linha.match(/^([^\d\t]+)[\t\s]*(\d{10,11}|\d{3}\.\d{3}\.\d{3}-\d{2})$/);
+                // Substitui múltiplos espaços ou tabulações por um único espaço
+                const linhaLimpa = linha.replace(/\s+/g, " ").trim();
+    
+                // Expressão regular para capturar o nome e o CPF
+                const match = linhaLimpa.match(/^(.+?)\s+(\d{9,11}|\d{3}\.\d{3}\.\d{3}-\d{2})$/);
+    
                 if (match) {
-                    const nome = match[1].trim(); // Parte do nome
-                    const cpf = match[2]; // Parte do CPF
-                    return `${nome};${cpf}`; // Adiciona ";" após o nome
+                    const nome = match[1].trim();
+                    const cpf = match[2].trim();
+                    return `${nome};${cpf}`;
                 }
-                return linha; // Retorna a linha como está se não for válida
+    
+                // Retorna a linha original se não corresponder ao padrão esperado
+                return linhaLimpa;
             })
-            .join("\n"); // Junta as linhas formatadas
+            .filter((linha) => linha !== "") // Remove linhas vazias
+            .join("\n");
+    
         setTextoFormatado(textoFormatado);
     };
-
+    
+    
     // Função para copiar o texto formatado
     const copiarTexto = () => {
         if (textoFormatado) {
