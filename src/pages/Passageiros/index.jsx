@@ -21,7 +21,7 @@ function Formulario() {
                 const linhaLimpa = linha.replace(/\s+/g, " ").trim();
     
                 // Expressão regular para capturar o nome e o CPF
-                const match = linhaLimpa.match(/^(.+?)\s+(\d{9,11}|\d{3}\.\d{3}\.\d{3}-\d{2})$/);
+                const match = linhaLimpa.match(/^(.+?)\s+([\w\d.-]+)$/);
     
                 if (match) {
                     const nome = match[1].trim();
