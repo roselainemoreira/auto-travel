@@ -1,12 +1,23 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: 'localhost',
-    port: 5173
-  }
-})
-
+    host: "localhost",
+    port: 5173,
+  },
+  define: {
+    "process.env": {},
+  },
+  build: {
+    rollupOptions: {
+      external: ["pdfjs-dist/build/pdf.worker.min.js"],
+      output: {
+        globals: {
+          "pdfjs-dist/build/pdf.worker.min.js": "pdfjsWorker",
+        },
+      },
+    },
+  },
+});
