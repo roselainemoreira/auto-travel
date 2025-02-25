@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
-
-import * as XLSX from "xlsx";
+import Tesseract from "tesseract.js";
 
 import IApagar from "../../assets/icons/lixo.png";
 import ICopiar from "../../assets/icons/copiar-texto.png";
@@ -8,102 +7,104 @@ import ICopiado from "../../assets/icons/texto-copiado.png";
 
 import Header from "../../components/Header";
 
-function Passageiros() {
+function ListaEmFoto() {
+    const [imagem, setImagem] = useState(null);
     const [texto, setTexto] = useState("");
     const [textoFormatado, setTextoFormatado] = useState("");
     const [textoCopiado, setTextoCopiado] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    // Referência para acessar o input de arquivo
     const fileInputRef = useRef(null);
 
-    // Função para formatar o texto
+    // Função para extrair texto da imagem
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setImagem(URL.createObjectURL(file)); // Mostra a imagem carregada
+            setLoading(true);
+    
+            try {
+                const { data: { text } } = await Tesseract.recognize(file, "por"); // OCR em português
+                console.log("Texto extraído:", text);
+    
+                // Processa o texto para extrair apenas Nome e RG
+                const textoFormatado = text
+                    .split("\n") // Divide por linhas
+                    .map((linha) => {
+                        const linhaLimpa = linha.replace(/\s+/g, " ").trim();
+    
+                        // Expressão regular para capturar apenas Nome e RG (primeiro número encontrado)
+                        const match = linhaLimpa.match(/^(.+?)\s+(\d{7,}-?\d*)\b/);
+    
+                        if (match) {
+                            const nome = match[1].trim();
+                            const rg = match[2].trim();
+                            return `${nome} ${rg}`;
+                        }
+    
+                        return null; // Descarta linhas que não correspondem ao padrão
+                    })
+                    .filter(Boolean) // Remove valores nulos
+                    .join("\n");
+    
+                setTexto(textoFormatado); // Define o texto extraído e formatado
+                setLoading(false);
+            } catch (error) {
+                console.error("Erro ao processar a imagem:", error);
+                alert("Erro ao processar a imagem. Tente outra.");
+                setLoading(false);
+            }
+        }
+    };
+    
+
+    // Função para formatar os dados extraídos
     const formatarTexto = (e) => {
         e.preventDefault();
 
         const linhas = texto.split("\n");
-
+        
+        // Filtra e formata apenas as colunas Nome e RG
         const textoFormatado = linhas
             .map((linha) => {
-                // Substitui múltiplos espaços ou tabulações por um único espaço
                 const linhaLimpa = linha.replace(/\s+/g, " ").trim();
-
-                // Expressão regular para capturar o nome e o CPF
                 const match = linhaLimpa.match(/^(.+?)\s+([\w\d.-]+)$/);
 
                 if (match) {
                     const nome = match[1].trim();
-                    const cpf = match[2].trim();
-                    return `${nome};${cpf}`;
+                    const rg = match[2].trim();
+                    return `${nome};${rg}`;
                 }
 
-                // Retorna a linha original se não corresponder ao padrão esperado
-                return linhaLimpa;
+                return null; // Descarta linhas que não correspondem ao padrão
             })
-            .filter((linha) => linha !== "") // Remove linhas vazias
+            .filter(Boolean) // Remove valores nulos
             .join("\n");
 
         setTextoFormatado(textoFormatado);
     };
-
 
     // Função para copiar o texto formatado
     const copiarTexto = () => {
         if (textoFormatado) {
             navigator.clipboard
                 .writeText(textoFormatado)
-                .then(() => {
-                    setTextoCopiado(true);
-                })
-                .catch(() => {
-                    alert("Erro ao copiar o texto.");
-                });
+                .then(() => setTextoCopiado(true))
+                .catch(() => alert("Erro ao copiar o texto."));
         }
     };
 
-
-    // Função para ler o arquivo Excel e extrair os dados
-    const handleFileUpload = (event) => {
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: "array" });
-
-                // Pega a primeira aba do Excel
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-
-                // Converte para JSON
-                const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-                // Filtra as linhas para pegar apenas Nome e Documento (sem formatação)
-                const rawData = jsonData
-                    .slice(1) // Ignora o cabeçalho
-                    .filter(row => row.length >= 2) // Garante que tenha pelo menos 2 colunas
-                    .map(row => `${row[0]} ${row[1]}`) // Apenas separa por espaço (não formata)
-                    .join("\n");
-
-                setTexto(rawData);
-            };
-
-            reader.readAsArrayBuffer(file);
-        }
-    };
-
-    // Função para limpar o arquivo e os dados do formulário
+    // Função para limpar tudo
     const handleClear = () => {
+        setImagem(null);
         setTexto("");
         setTextoFormatado("");
         setTextoCopiado(false);
 
         if (fileInputRef.current) {
-            fileInputRef.current.value = ""; // Limpa o campo de upload de arquivo
+            fileInputRef.current.value = "";
         }
     };
-
 
     return (
         <div className="home">
@@ -114,41 +115,44 @@ function Passageiros() {
                         <div className="row">
                             <div className="col-12 col-md-6">
                                 <div className="d-flex justify-content-between align-items-center">
-                                    <h4><b>Formatação dos nomes da lista</b></h4>
+                                    <h4><b>Upload da imagem da lista</b></h4>
                                 </div>
-                                {/* Input para Upload do Excel */}
                                 <input
                                     type="file"
-                                    accept=".xlsx, .xls"
+                                    accept=".png, .jpg, .jpeg"
                                     className="form-control mb-3"
-                                    onChange={handleFileUpload}
+                                    onChange={handleImageUpload}
                                     ref={fileInputRef}
                                 />
                             </div>
                         </div>
 
+                        {imagem && (
+                            <div className="text-center">
+                                <img src={imagem} alt="Imagem carregada" style={{ maxWidth: "100%", maxHeight: "300px" }} />
+                            </div>
+                        )}
 
-                        <div className="row">
+                        {loading && <p className="text-center mt-3">🔄 Processando imagem...</p>}
+
+                        <div className="row mt-3">
                             <div className="col-12 col-md-6">
                                 <div className="d-flex justify-content-between align-items-center mb-2">
-                                    <h4><b>Texto:</b></h4>
-                                    <div onClick={() => { handleClear(); }}>
+                                    <h4><b>Texto Extraído:</b></h4>
+                                    <div onClick={handleClear}>
                                         <img src={IApagar} alt="Ícone lixeira" />
                                     </div>
                                 </div>
-
                                 <textarea
                                     className="form-control"
-                                    id="exampleTextarea"
                                     rows="10"
-                                    placeholder="Cole os nomes e CPFs aqui ou faça o upload de um arquivo Excel..."
+                                    placeholder="Texto extraído da foto aparecerá aqui..."
                                     value={texto}
-                                    onChange={(e) => setTexto(e.target.value)}
+                                    readOnly
                                 ></textarea>
                             </div>
-                            <div className="col-12 col-md-6">
 
-                                {/* Exibição do texto formatado */}
+                            <div className="col-12 col-md-6">
                                 {textoFormatado && (
                                     <div>
                                         <div className="d-flex justify-content-between align-items-center mb-2">
@@ -163,22 +167,22 @@ function Passageiros() {
                                                 </div>
                                             )}
                                         </div>
-                                        <textarea className="form-control" rows="10" value={textoFormatado} readOnly></textarea>
+                                        <textarea
+                                            className="form-control"
+                                            rows="10"
+                                            value={textoFormatado}
+                                            readOnly
+                                        ></textarea>
                                     </div>
                                 )}
                             </div>
-
-
                         </div>
-
                     </div>
                     <button type="submit" className="btn btn-primary">Formatar</button>
                 </form>
-
-
             </div>
         </div>
     );
 }
 
-export default Passageiros;
+export default ListaEmFoto;
