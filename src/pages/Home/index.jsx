@@ -49,7 +49,7 @@ const Home = () => {
                                 }}
                             >
                                 <img src={IExcel} className="img-fluid" alt="Imagem do Card" style={{ width: "32px", height: "32px", objectFit: "contain" }} />
-                                <div className="card-body d-flex align-items-center" style={{ width: "100%", height: "100%" }}>
+                                <div className="card-body d-flex align-items-center" style={{ width: "100%", height: "100%", color:"#1c4986" }}>
                                     <h4 className="card-title m-0"><b>Lista em Excel</b></h4>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@ const Home = () => {
                                 }}
                             >
                                 <img src={IPdf} className="img-fluid" alt="Imagem do Card" style={{ width: "32px", height: "32px", objectFit: "contain" }} />
-                                <div className="card-body d-flex align-items-center" style={{ width: "100%", height: "100%" }}>
+                                <div className="card-body d-flex align-items-center" style={{ width: "100%", height: "100%", color:"#1c4986" }}>
                                     <h4 className="card-title m-0"><b>Lista em PDF</b></h4>
                                 </div>
                             </div>
@@ -109,7 +109,7 @@ const Home = () => {
                                 }}
                             >
                                 <img src={IFoto} className="img-fluid" alt="Imagem do Card" style={{ width: "32px", height: "32px", objectFit: "contain" }} />
-                                <div className="card-body d-flex align-items-center" style={{ width: "100%", height: "100%" }}>
+                                <div className="card-body d-flex align-items-center" style={{ width: "100%", height: "100%", color:"#1c4986" }}>
                                     <h4 className="card-title m-0"><b>Lista em Foto</b></h4>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@ const Home = () => {
                                 }}
                             >
                                 <img src={IMaps} className="img-fluid" alt="Imagem do Card" style={{ width: "32px", height: "32px", objectFit: "contain" }} />
-                                <div className="card-body d-flex align-items-center" style={{ width: "100%", height: "100%" }}>
+                                <div className="card-body d-flex align-items-center" style={{ width: "100%", height: "100%", color:"#1c4986" }}>
                                     <h4 className="card-title m-0"><b>Google Maps</b></h4>
                                 </div>
                             </div>
