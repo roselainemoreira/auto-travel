@@ -27,7 +27,7 @@ const Home = () => {
                 {/* Home principal */}
                 <div className="row justify-content-evenly mt-5" style={{ background: "rgb(255 255 255 / 24%)", height: "70vh", width: "96%", margin: "0 auto" }}>
                     {/* Card Passageiros */}
-                    <div className="col-12 col-md-4 col-lg-2 mt-2 ms-1" >
+                    <div className="col-12 col-md-4 col-lg-3 mt-2 ms-1" >
                         <Link to="/lista-em-excel" style={{ textDecoration: "none" }}>
 
                             <div className="card shadow-lg d-flex flex-row align-items-center p-3"
@@ -59,7 +59,7 @@ const Home = () => {
 
 
                     {/* Card lista em PDF */}
-                    <div className="col-12 col-md-4 col-lg-2 mt-2 ms-1">
+                    <div className="col-12 col-md-4 col-lg-3 mt-2 ms-1">
                         <Link to="/lista-em-pdf" style={{ textDecoration: "none" }}>
                             <div className="card shadow-lg d-flex flex-row align-items-center p-3"
                                 style={{
@@ -88,7 +88,7 @@ const Home = () => {
                     </div>
 
                     {/* Card lista em Foto */}
-                    <div className="col-12 col-md-4 col-lg-2 mt-2 ms-1">
+                    <div className="col-12 col-md-4 col-lg-3 mt-2 ms-1">
                         <Link to="/lista-em-foto" style={{ textDecoration: "none" }}>
                             <div className="card shadow-lg d-flex flex-row align-items-center p-3"
                                 style={{
@@ -116,8 +116,8 @@ const Home = () => {
                         </Link>
                     </div>
 
-                    {/* Card Google Maps */}
-                    <div className="col-12 col-md-4 col-lg-2 mt-2 mx-1">
+                    {/* Card Google Maps
+                    <div className="col-12 col-md-4 col-lg-3 mt-2 mx-1">
                         <a href="https://www.google.com.br/maps/" target="_blanck" rel="noopener noreferrer"
                             style={{ textDecoration: "none" }}>
 
@@ -144,7 +144,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </a>
-                    </div>
+                    </div> */}
 
                     {/* <div className="col-12 col-md-3 col-lg-2"></div>
                     <div className="col-12 col-md-3 col-lg-2"></div> */}

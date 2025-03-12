@@ -53,40 +53,36 @@ function ListaEmPDF() {
                     extractedText += pageText + "\n";
                 }
 
-                // Separar o texto em linhas corretamente e remover "_____"
+                // Separar o texto em linhas e limpar espaços desnecessários
                 let lines = extractedText.split("\n").map(line => line.trim()).filter(line => line && line !== "_____");
 
-                // **1️⃣ Encontrar a linha onde começa a tabela**
+                // **1️⃣ Encontrar onde começam os dados**
                 let nomeIndex = lines.findIndex(line => line.toLowerCase() === "nome");
-                let rgIndex = lines.findIndex(line => line.toLowerCase() === "rg");
+                let documentoIndex = lines.findIndex(line => line.toLowerCase() === "documento");
 
-                if (nomeIndex === -1 || rgIndex === -1) {
+                if (nomeIndex === -1 || documentoIndex === -1) {
                     setTexto("Cabeçalho não encontrado.");
                     return;
                 }
 
-                // O cabeçalho está identificado, pegamos os dados abaixo
-                let headerIndex = Math.min(nomeIndex, rgIndex);
-
-                // **2️⃣ Capturar os dados da tabela a partir do cabeçalho**
-                const tableData = lines.slice(headerIndex + 1);
-
+                // **2️⃣ Capturar os dados abaixo do cabeçalho**
+                const tableData = lines.slice(Math.max(nomeIndex, documentoIndex) + 1);
                 let formattedRows = [];
                 let currentName = "";
 
-                // **3️⃣ Processar os dados agrupando Nome + RG corretamente**
+                // **3️⃣ Processar os dados agrupando Nome + Documento corretamente**
                 for (let i = 0; i < tableData.length; i++) {
                     let line = tableData[i];
 
-                    // Expressão regular para identificar qualquer número válido (RG ou RG+CPF juntos)
-                    const numberMatch = line.match(/\b[\d\.\-]{7,30}\b/);
+                    // Verificar se a linha contém um número de documento (CPF)
+                    const documentoMatch = line.match(/\b\d{3}\.\d{3}\.\d{3}-\d{2}\b/);
 
-                    if (numberMatch) {
+                    if (documentoMatch) {
                         if (currentName) {
-                            formattedRows.push(`${currentName} ${numberMatch[0]}`);
+                            formattedRows.push(`${currentName} ${documentoMatch[0]}`);
                             currentName = ""; // Resetar para o próximo nome
                         }
-                    } else if (!line.match(/^\d+$/) && !["Código", "Documento", "Status", "RG"].includes(line)) {
+                    } else if (!line.match(/^\d+$/) && !["Código", "Nome", "RG", "Documento", "Status"].includes(line)) {
                         if (currentName) {
                             currentName += ` ${line}`;
                         } else {
@@ -102,6 +98,8 @@ function ListaEmPDF() {
             reader.readAsArrayBuffer(file);
         }
     };
+
+
 
 
     // Função para processar o texto e extrair nome e CPF
@@ -131,65 +129,6 @@ function ListaEmPDF() {
 
         setTextoFormatado(textoFormatado);
     };
-
-
-    // const handlePDFUpload = async (event) => {
-    //     const file = event.target.files[0];
-
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onload = async (e) => {
-    //             const typedArray = new Uint8Array(e.target.result);
-    //             const pdf = await pdfjs.getDocument(typedArray).promise;
-    //             let extractedText = "";
-
-    //             for (let i = 1; i <= pdf.numPages; i++) {
-    //                 const page = await pdf.getPage(i);
-    //                 const textContent = await page.getTextContent();
-
-    //                 // Agora, cada item do PDF será separado corretamente por espaço
-    //                 const pageText = textContent.items.map(item => item.str).join(" ");
-    //                 extractedText += pageText + "\n";
-    //             }
-
-    //             console.log("Texto Extraído:", extractedText); // Debug para ver o texto real
-
-    //             // Separar as linhas do texto extraído corretamente
-    //             const lines = extractedText.split(/\s{2,}/).map(line => line.trim()).filter(line => line);
-
-    //             console.log("Linhas Extraídas:", lines); // Verificar se agora as linhas estão separadas corretamente
-
-    //             // **Criar um novo array para reconstruir os nomes com os documentos**
-    //             let formattedLines = [];
-    //             let currentName = "";
-
-    //             lines.forEach((line, index) => {
-    //                 // Expressão regular para identificar um CPF válido
-    //                 const cpfMatch = line.match(/(\d{3}\.\d{3}\.\d{3}-\d{2}|\d{11})/);
-
-    //                 if (cpfMatch) {
-    //                     // Se a linha contém um CPF, assumimos que a linha anterior tinha o nome
-    //                     formattedLines.push(`${currentName} ${cpfMatch[1]}`);
-    //                     currentName = ""; // Resetar para evitar acumular nomes errados
-    //                 } else if (!line.match(/^\d+$/)) {
-    //                     // Se a linha não é um número isolado (código ou RG), assumimos que é um nome
-    //                     currentName = line;
-    //                 }
-    //             });
-
-    //             // Garantir que os dados estejam formatados corretamente
-    //             const filteredText = formattedLines.join("\n");
-
-    //             if (!filteredText.trim()) {
-    //                 console.warn("Nenhuma correspondência encontrada. Verifique a estrutura do PDF.");
-    //             }
-
-    //             setTexto(filteredText);
-    //         };
-    //         reader.readAsArrayBuffer(file);
-    //     }
-    // };
-
 
 
     // Função para limpar os dados do formulário
