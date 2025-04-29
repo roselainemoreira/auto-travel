@@ -144,7 +144,7 @@ function ListaEmPDF() {
     return (
         <div className="home">
             <Header />
-            <div className="container mt-5">
+            <div className="container mt-3">
                 <form onSubmit={formatarTexto}>
                     <div className="mb-3">
                         <div className="row">
