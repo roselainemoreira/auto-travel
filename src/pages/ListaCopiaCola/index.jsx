@@ -16,30 +16,48 @@ function ListaCopiaCola() {
     const fileInputRef = useRef(null);
 
     // Função para formatar o texto
-const formatarTexto = (e) => {
-  e.preventDefault();
+    const formatarTexto = (e) => {
+        e.preventDefault();
 
-  const linhas = texto
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line !== "");
+        // Limpa e filtra linhas vazias
+        const linhas = texto
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line !== "");
 
-  // Ignorar as 4 primeiras linhas (título + cabeçalho)
-  const dados = linhas.slice(4);
+        let dados = [];
 
-  let resultado = [];
+        // Detectar o primeiro grupo válido (nome, rg, cpf) e começar a partir daí
+        for (let i = 0; i < linhas.length - 2; i++) {
+            const nomeProvavel = linhas[i];
+            const rgProvavel = linhas[i + 1];
+            const cpfProvavel = linhas[i + 2];
 
-  for (let i = 0; i < dados.length; i += 3) {
-    const nome = dados[i];
-    const cpf = dados[i + 2];
+            const isNome = !/^\d{7,}$/.test(nomeProvavel); // nome não é número
+            const isRG = /^\d{7,}$/.test(rgProvavel); // RG é número com 7+ dígitos
+            const isCPF = /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/.test(cpfProvavel) || /^\d{11}$/.test(cpfProvavel);
 
-    if (nome && cpf) {
-      resultado.push(`${nome};${cpf}`);
-    }
-  }
+            if (isNome && isRG && isCPF) {
+                dados = linhas.slice(i);
+                break;
+            }
+        }
 
-  setTextoFormatado(resultado.join("\n"));
-};
+        const resultado = [];
+
+        for (let i = 0; i < dados.length; i += 3) {
+            const nome = dados[i];
+            const cpf = dados[i + 2];
+
+            if (nome && cpf) {
+                resultado.push(`${nome};${cpf}`);
+            }
+        }
+
+        setTextoFormatado(resultado.join("\n"));
+    };
+
+
 
     // Função para formatar o texto
     // const formatarTexto = (e) => {
