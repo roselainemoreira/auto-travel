@@ -16,48 +16,74 @@ function ListaCopiaCola() {
     const fileInputRef = useRef(null);
 
     // Função para formatar o texto
-    const formatarTexto = (e) => {
-        e.preventDefault();
-    
-        const linhas = texto.split("\n").map(line => line.trim()).filter(line => line !== "");
-    
-        let formattedRows = [];
-        let currentName = "";
-    
-        for (let i = 0; i < linhas.length; i++) {
-            let line = linhas[i];
-    
-            // Expressão regular para capturar documentos (CPF/RG)
-            const documentoMatch = line.match(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b|\b\d{9}-\d{2}\b/);
-    
-            if (documentoMatch) {
-                if (currentName) {
-                    formattedRows.push(`${currentName};${documentoMatch[0]}`); // Agora separa Nome e CPF com `;`
-                    currentName = ""; // Resetar para o próximo nome
-                }
-            } else if (!line.match(/^\d+$/) && !documentoMatch) {
-                // Se não for um número isolado e não for CPF, consideramos como nome
-                if (!linhas[i + 1] || !linhas[i + 1].match(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b|\b\d{9}-\d{2}\b/)) {
-                    continue; // Ignora essa linha, pois não é um CPF
-                }
-    
-                // Se não ignorarmos, adicionamos como nome
-                if (currentName) {
-                    currentName += ` ${line}`;
-                } else {
-                    currentName = line;
-                }
-            }
-        }
-    
-        // Exibir o resultado formatado com `;`
-        setTextoFormatado(formattedRows.join("\n"));
-    };
-    
-    
-    
-    
-    
+const formatarTexto = (e) => {
+  e.preventDefault();
+
+  const linhas = texto
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "");
+
+  // Ignorar as 4 primeiras linhas (título + cabeçalho)
+  const dados = linhas.slice(4);
+
+  let resultado = [];
+
+  for (let i = 0; i < dados.length; i += 3) {
+    const nome = dados[i];
+    const cpf = dados[i + 2];
+
+    if (nome && cpf) {
+      resultado.push(`${nome};${cpf}`);
+    }
+  }
+
+  setTextoFormatado(resultado.join("\n"));
+};
+
+    // Função para formatar o texto
+    // const formatarTexto = (e) => {
+    //     e.preventDefault();
+
+    //     const linhas = texto.split("\n").map(line => line.trim()).filter(line => line !== "");
+
+    //     let formattedRows = [];
+    //     let currentName = "";
+
+    //     for (let i = 0; i < linhas.length; i++) {
+    //         let line = linhas[i];
+
+    //         // Expressão regular para capturar documentos (CPF/RG)
+    //         const documentoMatch = line.match(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b|\b\d{9}-\d{2}\b/);
+
+    //         if (documentoMatch) {
+    //             if (currentName) {
+    //                 formattedRows.push(`${currentName};${documentoMatch[0]}`); // Agora separa Nome e CPF com `;`
+    //                 currentName = ""; // Resetar para o próximo nome
+    //             }
+    //         } else if (!line.match(/^\d+$/) && !documentoMatch) {
+    //             // Se não for um número isolado e não for CPF, consideramos como nome
+    //             if (!linhas[i + 1] || !linhas[i + 1].match(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b|\b\d{9}-\d{2}\b/)) {
+    //                 continue; // Ignora essa linha, pois não é um CPF
+    //             }
+
+    //             // Se não ignorarmos, adicionamos como nome
+    //             if (currentName) {
+    //                 currentName += ` ${line}`;
+    //             } else {
+    //                 currentName = line;
+    //             }
+    //         }
+    //     }
+
+    //     // Exibir o resultado formatado com `;`
+    //     setTextoFormatado(formattedRows.join("\n"));
+    // };
+
+
+
+
+
 
 
     // Função para copiar o texto formatado
